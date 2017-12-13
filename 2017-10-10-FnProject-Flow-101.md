@@ -1,3 +1,5 @@
+**NOTE:** [Flow 101](https://mjg123.github.io/2017/10/10/FnProject-Flow-101.html) was originally posted by [Matt Gilliard (@MaximumGilliard)](https://twitter.com/maximumgilliard).  This version has been updated with changes compatible with Fn as of December 13th, 2017.
+
 [FnProject](http://fnproject.io) is out **now**. [Chad Arimura](https://twitter.com/chadarimura/) explained the motivation and structure of the project in a good amount of detail [in his recent post](https://twitter.com/chadarimura/status/917706536759234560), with one of the major components being **Fn Flow**. Flow allows developers to build high-level workflows of functions with some notable features:
 
   - Flexible model of function composition. Sequencing, fan out/in, retries, error-handling and more.
@@ -163,7 +165,7 @@ Your number is 4
 
 Browse to [http://localhost:3002](http://localhost:3002) and invoke the function again.  You should see something like this:
 
-![flow-ui](../assets/simple-flow-ui.png)
+![flow-ui](assets/simple-flow-ui.png)
 
 Which is showing us 3 function invocations:
 
@@ -175,7 +177,7 @@ Click on any of these and see the detail for each one expanded at the bottom of 
 
 The blue function is shown as running for the whole time that the `thenApply` stages are. Why? Because we are calling `.get()` at the end, so this is synchronously waiting for the final result of the chain. Exercise: Try removing the `.get()` from the code (you'll need to return a different String, and don't forget to re-deploy). Now it will look like:
 
-![flow-ui](../assets/simple-flow-ui-async.png)
+![flow-ui](assets/simple-flow-ui-async.png)
 
 This shows that Flow is well-suited for asynchronous functions which result in a side-effect (posting to slack, for example).
 

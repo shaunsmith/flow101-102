@@ -1,3 +1,5 @@
+**NOTE:** [Flow 102](https://mjg123.github.io/2017/10/11/FnProject-Flow-102.html) was originally posted by [Matt Gilliard (@MaximumGilliard)](https://twitter.com/maximumgilliard).  This version has been updated with changes compatible with Fn as of December 13th, 2017.
+
 If you haven't read [Flow 101](2017-10-10-FnProject-Flow-101.md) yet, I encourage you to start there and get grounded in what Flow is, what it's for and how it works.
 
 In this post I'll go through how to build a more complex Flow with parallelism and asynchronous chaining. I'll assume you have set up the services as described in the Flow 101.
@@ -121,7 +123,7 @@ The first ten lines are:
 
 Check the UI on [http://localhost:3002](http://localhost:3002) and you should see something like this:
 
-![flow-ui](../assets/word-flow.png)
+![flow-ui](assets/word-flow.png)
 
 As you could see from the code above, the `head` and `grep` are executed in parallel, the `linecount` has to wait for the `grep`, and the `main` has to wait till everything else is finished.
 
