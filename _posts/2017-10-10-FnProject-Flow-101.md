@@ -1,14 +1,3 @@
----
-layout:     post
-title:      Flow 101
-date:       2017-10-10 09:00:00
-summary:    First intro to FnProject Flow
-tags:
-- fnproject
-- flow
-- fdk-java
----
-
 [FnProject](http://fnproject.io) is out **now**. [Chad Arimura](https://twitter.com/chadarimura/) explained the motivation and structure of the project in a good amount of detail [in his recent post](https://twitter.com/chadarimura/status/917706536759234560), with one of the major components being **Fn Flow**. Flow allows developers to build high-level workflows of functions with some notable features:
 
   - Flexible model of function composition. Sequencing, fan out/in, retries, error-handling and more.
@@ -17,9 +6,6 @@ tags:
   - Language agnostic. The initial Flow implementation which this post will use is in Java but support for other langauges has already started including Python, [Go](https://github.com/fnproject/flow-lib-go) and JS.
 
 --
-
-* TOC
-{:toc}
 
   
 ## What is a Flow?
@@ -66,11 +52,8 @@ Currently FnProject is available to download, to experiment with, and to run on 
 
 ### Setting up
 
-Install the **`fn`** CLI tool:
+Install the **`fn`** CLI tool following the instructions in [Introduction to Fn](https://github.com/shaunsmith/tutorials/tree/master/Introduction).
 
-```shell
-⇒ curl -LSs https://raw.githubusercontent.com/fnproject/cli/master/install | sh
-```
 
 Then start the **Fn server**:
 
@@ -88,9 +71,9 @@ time="2017-10-11T13:12:44Z" level=info msg="Serving Functions API on address `:8
 
 The **Flow Server** needs to know how to call the Fn server, so ask Docker which IP address to use.
 
-```shell {% raw %}
-⇒ DOCKER_LOCALHOST=$(docker inspect --type container -f '{{.NetworkSettings.Gateway}}' functions)
-{% endraw %}```
+```
+⇒ DOCKER_LOCALHOST=$(docker inspect --type container -f '{{.NetworkSettings.Gateway}}' fnserver)
+```
 
 Start the **Flow Server**:
 
@@ -99,7 +82,7 @@ Start the **Flow Server**:
        -p 8081:8081 \
        -e API_URL="http://$DOCKER_LOCALHOST:8080/r" \
        -e no_proxy=$DOCKER_LOCALHOST \
-       --name completer \
+       --name flow \
        fnproject/flow:latest
 ```
 
@@ -132,12 +115,6 @@ Flow has a comprehensive test framework, but lets concentrate on playing with th
 ```
 
 Make peace with yourself after that, then let's get the code in shape.
-
-Firstly, note that execution will happen much faster if your function is "hot":
-
-```
-⇒ echo 'format: http' >> func.yaml
-```
 
 Change `HelloFunction.java` to look like this:
 
@@ -184,9 +161,9 @@ Your number is 4
 
 ### Exploring the UI
 
-Browsing to [http://localhost:3002](http://localhost:3002) you should see something like this:
+Browse to [http://localhost:3002](http://localhost:3002) and invoke the function again.  You should see something like this:
 
-![flow-ui]({{ "assets/simple-flow-ui.png" | relative_url }})
+![flow-ui](../assets/simple-flow-ui.png)
 
 Which is showing us 3 function invocations:
 
@@ -198,7 +175,7 @@ Click on any of these and see the detail for each one expanded at the bottom of 
 
 The blue function is shown as running for the whole time that the `thenApply` stages are. Why? Because we are calling `.get()` at the end, so this is synchronously waiting for the final result of the chain. Exercise: Try removing the `.get()` from the code (you'll need to return a different String, and don't forget to re-deploy). Now it will look like:
 
-![flow-ui]({{ "assets/simple-flow-ui-async.png" | relative_url }})
+![flow-ui](../assets/simple-flow-ui-async.png)
 
 This shows that Flow is well-suited for asynchronous functions which result in a side-effect (posting to slack, for example).
 
@@ -211,6 +188,6 @@ We think Flow hits a very sweet spot of allowing sophisticated stateful apps def
 
 ## Summary
 
-So, congratulations - we've covered a lot! You've got a Flow function running, seen how to use the API to compose simple transformations and run things in parallel. Head to the [Flow 102](/2017/10/11/FnProject-Flow-102.html) post to take your Flows to the next level.
+So, congratulations - we've covered a lot! You've got a Flow function running, seen how to use the API to compose simple transformations and run things in parallel. Head to the [Flow 102](2017-10-11-FnProject-Flow-102.md) post to take your Flows to the next level.
 
 Any questions or comments? There is [#fn-flow](https://join.slack.com/t/fnproject/shared_invite/enQtMjIwNzc5MTE4ODg3LTdlYjE2YzU1MjAxODNhNGUzOGNhMmU2OTNhZmEwOTcxZDQxNGJiZmFiMzNiMTk0NjU2NTIxZGEyNjI0YmY4NTA) on the FnProject slack, and [our github](https://github.com/fnproject/). Or hit me up on Twitter as [@MaximumGilliard](https://twitter.com/maximumgilliard).

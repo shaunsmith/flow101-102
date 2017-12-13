@@ -1,22 +1,6 @@
----
-layout:     post
-title:      Flow 102
-date:       2017-10-11 09:00:00
-summary:    Second intro to FnProject Flow
-tags:
-- fnproject
-- flow
-- fdk-java
----
-
-If you haven't read [Flow 101](/2017/10/10/FnProject-Flow-101.html) yet, I encourage you to start there and get grounded in what Flow is, what it's for and how it works.
+If you haven't read [Flow 101](2017-10-10-FnProject-Flow-101.md) yet, I encourage you to start there and get grounded in what Flow is, what it's for and how it works.
 
 In this post I'll go through how to build a more complex Flow with parallelism and asynchronous chaining. I'll assume you have set up the services as described in the Flow 101.
-
---
-
-* TOC
-{:toc}
 
 ## The demo Flow
 
@@ -60,7 +44,6 @@ In a new directory called `word-flow`:
 
 ```shell
 ⇒ fn init --runtime=java
-⇒ echo 'format: http' >> func.yaml
 ⇒ rm -rf src/test  ## yolo, again
 ```
 
@@ -116,12 +99,13 @@ We'll want some test data:
 ⇒ curl http://www.gutenberg.org/cache/epub/1524/pg1524.txt > hamlet.txt
 ```
 
-Deploy the function, and remember to configure the app with the location of the completer:
+Deploy the function, and remember to configure the app with the location of the flow server (aka the 'completer'):
 
-```shell{% raw %}
-⇒ export DOCKER_LOCALHOST=$(docker inspect --type container -f '{{.NetworkSettings.Gateway}}' functions)
+```shell
+⇒ fn deploy --app flow102 --local
+⇒ export DOCKER_LOCALHOST=$(docker inspect --type container -f '{{.NetworkSettings.Gateway}}' fnserver)
 ⇒ fn apps config set flow102 COMPLETER_BASE_URL "http://$DOCKER_LOCALHOST:8081"
-{% endraw %}```
+```
 
 And... send in the Shakespeare:
 
@@ -137,7 +121,7 @@ The first ten lines are:
 
 Check the UI on [http://localhost:3002](http://localhost:3002) and you should see something like this:
 
-![flow-ui]({{ "/assets/word-flow.png" | relative_url }})
+![flow-ui](../assets/word-flow.png)
 
 As you could see from the code above, the `head` and `grep` are executed in parallel, the `linecount` has to wait for the `grep`, and the `main` has to wait till everything else is finished.
 
